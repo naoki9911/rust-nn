@@ -5,7 +5,7 @@ use mnist::{Mnist, MnistBuilder};
 use ndarray::{s, Array, Array2};
 
 mod optimizer;
-use optimizer::MomentumSGD;
+use optimizer::Adam;
 
 mod layer;
 use layer::{Affine, ReLU, Softmax};
@@ -45,9 +45,9 @@ fn main() {
     let tst_img: Array2<f32> = tst_img.reversed_axes() / 255.0;
 
     let mut model = Model::new();
-    model.add_layer(Box::new(Affine::<MomentumSGD>::new(rows*cols, 1000)));
+    model.add_layer(Box::new(Affine::<Adam>::new(rows*cols, 1000)));
     model.add_layer(Box::new(ReLU::new(1000, 1000)));
-    model.add_layer(Box::new(Affine::<MomentumSGD>::new(1000, 10)));
+    model.add_layer(Box::new(Affine::<Adam>::new(1000, 10)));
     model.add_layer(Box::new(Softmax::new(10, 10)));
     model.train(&trn_img, &trn_lbl, &tst_img, &tst_lbl);
 
