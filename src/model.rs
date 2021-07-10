@@ -37,7 +37,7 @@ impl Model {
                     .slice(s![.., batch * batch_size..(batch + 1) * batch_size])
                     .into_owned();
                 for l in &mut self.layers {
-                    res = l.forward(&res);
+                    res = l.forward(&res, true);
                 }
                 loss_sum += cross_entroy(
                     &res,
@@ -55,7 +55,7 @@ impl Model {
             }
             let mut res: Array2<f32> = tst_img.clone();
             for l in &mut self.layers {
-                res = l.forward(&res);
+                res = l.forward(&res, false);
             }
             let ans = get_ans(&res);
             let mut ans_sum = 0;
@@ -77,7 +77,7 @@ impl Model {
     pub fn eval(&mut self, img: &Array2<f32>) -> Vec<usize> {
         let mut res: Array2<f32> = img.clone();
         for l in &mut self.layers {
-            res = l.forward(&res);
+            res = l.forward(&res, false);
         }
         let ans = get_ans(&res);
 
